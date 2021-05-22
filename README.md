@@ -1,5 +1,10 @@
 # opinion-ate
- Code for Outside-in Frontend Development 
+
+An app for tracking reviews of dishes at different restaurants.
+
+Code for Outside-in Frontend Development 
+
+Obs.: Project use npm instead of yarn
 
 ## Project setup
 ```
