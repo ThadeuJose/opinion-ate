@@ -3,12 +3,21 @@ import RestaurantList from '@/components/RestaurantList';
 import Vuex from 'vuex';
 
 describe('RestaurantList', () => {
+  const records = [
+    {id: 1, name: 'Sushi Place'},
+    {id: 2, name: 'Pizza Place'},
+  ];
+
   const localVue = createLocalVue();
   localVue.use(Vuex);
 
-  it('loads restaurants on mount', () => {
-    const restaurantsModule = {
+  let restaurantsModule;
+  let wrapper;
+
+  beforeEach(() => {
+    restaurantsModule = {
       namespaced: true,
+      state: {records},
       actions: {
         load: jest.fn().mockName('load'),
       },
@@ -20,39 +29,14 @@ describe('RestaurantList', () => {
       },
     });
 
-    mount(RestaurantList, {localVue, store});
+    wrapper = mount(RestaurantList, {localVue, store});
+  });
 
+  it('loads restaurants on mount', () => {
     expect(restaurantsModule.actions.load).toHaveBeenCalled();
   });
 
   it('displays the restaurants', () => {
-    const records = [
-      {
-        id: 1,
-        name: 'Sushi Place',
-      },
-      {
-        id: 2,
-        name: 'Pizza Place',
-      },
-    ];
-
-    const restaurantsModule = {
-      namespaced: true,
-      state: {records},
-      actions: {
-        load: jest.fn().mockName('Load'),
-      },
-    };
-
-    const store = new Vuex.Store({
-      modules: {
-        restaurants: restaurantsModule,
-      },
-    });
-
-    const wrapper = mount(RestaurantList, {localVue, store});
-
     const firstRestaurantName = wrapper
       .findAll('[data-testid="restaurant"]')
       .at(0)
