@@ -19,10 +19,10 @@ describe('RestaurantList', () => {
   let restaurantsModule;
   let wrapper;
 
-  beforeEach(() => {
+  const mountWithStore = (state = {records, loading: false}) => {
     restaurantsModule = {
       namespaced: true,
-      state: {records},
+      state,
       actions: {
         load: jest.fn().mockName('load'),
       },
@@ -35,25 +35,45 @@ describe('RestaurantList', () => {
     });
 
     wrapper = mount(RestaurantList, {localVue, store, vuetify});
-  });
+  };
 
   it('loads restaurants on mount', () => {
+    mountWithStore();
     expect(restaurantsModule.actions.load).toHaveBeenCalled();
   });
 
-  it('displays the restaurants', () => {
-    const firstRestaurantName = wrapper
-      .findAll('[data-testid="restaurant"]')
-      .at(0)
-      .text();
+  describe('when loading suceeds', () => {
+    beforeEach(() => {
+      mountWithStore();
+    });
 
-    expect(firstRestaurantName).toBe('Sushi Place');
+    it('does not displays the loading indicator while not loading', () => {
+      expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(
+        false,
+      );
+    });
 
-    const secondRestaurantName = wrapper
-      .findAll('[data-testid="restaurant"]')
-      .at(1)
-      .text();
+    it('displays the restaurants', () => {
+      const firstRestaurantName = wrapper
+        .findAll('[data-testid="restaurant"]')
+        .at(0)
+        .text();
 
-    expect(secondRestaurantName).toBe('Pizza Place');
+      expect(firstRestaurantName).toBe('Sushi Place');
+
+      const secondRestaurantName = wrapper
+        .findAll('[data-testid="restaurant"]')
+        .at(1)
+        .text();
+
+      expect(secondRestaurantName).toBe('Pizza Place');
+    });
+  });
+
+  it('displays the loading indicator while loading', () => {
+    mountWithStore({loading: true});
+    expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(
+      true,
+    );
   });
 });
