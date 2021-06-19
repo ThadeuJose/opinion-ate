@@ -42,6 +42,16 @@ describe('RestaurantList', () => {
     expect(restaurantsModule.actions.load).toHaveBeenCalled();
   });
 
+  describe('when loading fails', () => {
+    beforeEach(() => {
+      mountWithStore({loadError: true});
+    });
+
+    it('display the error message', () => {
+      expect(wrapper.find('[data-testid="loading-error"]').exists()).toBe(true);
+    });
+  });
+
   describe('when loading suceeds', () => {
     beforeEach(() => {
       mountWithStore();
@@ -51,6 +61,10 @@ describe('RestaurantList', () => {
       expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(
         false,
       );
+    });
+
+    it('does not display the error message', () => {
+      expect(wrapper.find('[data-testid="loading-erro"]').exists()).toBe(false);
     });
 
     it('displays the restaurants', () => {
